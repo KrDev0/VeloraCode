@@ -65,8 +65,11 @@
         '\"',
         '\'',
         '\''};
+            this.TextProce.AutoIndentCharsPatterns = "\r\n^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\r\n^\\s*(case|default)\\s*[^:]" +
+    "*(?<range>:)\\s*(?<range>[^;]+);\r\n";
             this.TextProce.AutoScrollMinSize = new System.Drawing.Size(27, 14);
             this.TextProce.BackBrush = null;
+            this.TextProce.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
             this.TextProce.CharHeight = 14;
             this.TextProce.CharWidth = 8;
             this.TextProce.ContextMenuStrip = this.MenuEditor;
@@ -74,9 +77,13 @@
             this.TextProce.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.TextProce.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextProce.IsReplaceMode = false;
+            this.TextProce.LeftBracket = '(';
+            this.TextProce.LeftBracket2 = '{';
             this.TextProce.Location = new System.Drawing.Point(0, 20);
             this.TextProce.Name = "TextProce";
             this.TextProce.Paddings = new System.Windows.Forms.Padding(0);
+            this.TextProce.RightBracket = ')';
+            this.TextProce.RightBracket2 = '}';
             this.TextProce.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.TextProce.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("TextProce.ServiceColors")));
             this.TextProce.Size = new System.Drawing.Size(749, 541);

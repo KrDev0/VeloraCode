@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -252,5 +253,261 @@ namespace VeloraCode
                 }
             }
         }
+
+        private void imprimirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var tab = editor.tabControl1.SelectedTab;
+            if (tab?.Controls.Count > 0 && tab.Controls[0] is FastTextBox fastTextBox)
+            {
+                var fastColoredTextBox = fastTextBox.Controls.OfType<FastColoredTextBox>().FirstOrDefault();
+
+                if (fastColoredTextBox != null)
+                {
+                    PrintDialog printDialog = new PrintDialog();
+                    PrintDocument printDocument = new PrintDocument();
+
+                    printDocument.PrintPage += (s, ev) =>
+                    {
+                        ev.Graphics.DrawString(
+                            fastColoredTextBox.Text,
+                            fastColoredTextBox.Font,
+                            Brushes.Black,
+                            ev.MarginBounds,
+                            StringFormat.GenericTypographic
+                        );
+                    };
+
+                    printDialog.Document = printDocument;
+
+                    if (printDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        printDocument.Print();
+                    }
+                }
+            }
+        }
+
+        private void vistapreviadeimpresiónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var tab = editor.tabControl1.SelectedTab;
+            if (tab?.Controls.Count > 0 && tab.Controls[0] is FastTextBox fastTextBox)
+            {
+                var fastColoredTextBox = fastTextBox.Controls.OfType<FastColoredTextBox>().FirstOrDefault();
+
+                if (fastColoredTextBox != null)
+                {
+                    PrintDocument printDocument = new PrintDocument();
+
+                    printDocument.PrintPage += (s, ev) =>
+                    {
+                        ev.Graphics.DrawString(
+                            fastColoredTextBox.Text,
+                            fastColoredTextBox.Font,
+                            Brushes.Black,
+                            ev.MarginBounds,
+                            StringFormat.GenericTypographic
+                        );
+                    };
+
+                    PrintPreviewDialog previewDialog = new PrintPreviewDialog
+                    {
+                        Document = printDocument,
+                        Width = 1200,
+                        Height = 800
+                    };
+
+                    previewDialog.ShowDialog();
+                }
+            }
+        }
+
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Seguro que desea salir de la app?", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                e.Cancel = false;
+            else
+                e.Cancel = true;
+        }
+
+        private void btnAbrirCarpeta_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    treeView1.Nodes.Clear();
+                    var rootDir = new DirectoryInfo(fbd.SelectedPath);
+
+                    TreeNode rootNode = new TreeNode(rootDir.Name)
+                    {
+                        Tag = rootDir.FullName,
+                        ImageKey = IconManager.GetIconKey(rootDir.FullName, true, this),
+                        SelectedImageKey = IconManager.GetIconKey(rootDir.FullName, true, this)
+                    };
+
+                    btnAbrirCarpeta.Visible = false;
+                    treeView1.Nodes.Add(rootNode);
+
+                    CargarDirectoriosYArchivos(rootDir.FullName, rootNode);
+                    rootNode.Expand();
+                }
+            }
+        }
+        private void CargarDirectoriosYArchivos(string ruta, TreeNode nodoPadre)
+        {
+            try
+            {
+                // Carpetas
+                foreach (var carpeta in Directory.GetDirectories(ruta))
+                {
+                    DirectoryInfo dir = new DirectoryInfo(carpeta);
+
+                    TreeNode dirNode = new TreeNode(dir.Name)
+                    {
+                        Tag = dir.FullName,
+                        ImageKey = IconManager.GetIconKey(dir.FullName, true, this),
+                        SelectedImageKey = IconManager.GetIconKey(dir.FullName, true, this)
+                    };
+
+                    nodoPadre.Nodes.Add(dirNode);
+                    CargarDirectoriosYArchivos(dir.FullName, dirNode);
+                }
+
+                // Archivos
+                foreach (var archivo in Directory.GetFiles(ruta))
+                {
+                    FileInfo fi = new FileInfo(archivo);
+
+                    TreeNode fileNode = new TreeNode(fi.Name)
+                    {
+                        Tag = fi.FullName,
+                        ImageKey = IconManager.GetIconKey(fi.FullName, false, this),
+                        SelectedImageKey = IconManager.GetIconKey(fi.FullName, false,this)
+                    };
+
+                    nodoPadre.Nodes.Add(fileNode);
+                }
+            }
+            catch
+            {
+                // Ignorar carpetas protegidas
+            }
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            string path = e.Node.Tag?.ToString();
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            // Si es carpeta, no hacemos nada
+            if (Directory.Exists(path))
+                return;
+
+            // Intentar abrir el archivo SIEMPRE
+            AbrirArchivoEnNuevaPestaña(path);
+        }
+
+        private void AbrirArchivoEnNuevaPestaña(string rutaArchivo)
+        {
+            try
+            {
+                // Intentar leer el archivo (esto fallará en binarios u otros incompatibles)
+                string contenido = File.ReadAllText(rutaArchivo);
+
+                // Crear control
+                FastTextBox fastTextBox = new FastTextBox { Dock = DockStyle.Fill };
+
+                var fastColoredTextBox = fastTextBox.Controls.OfType<FastColoredTextBox>().FirstOrDefault();
+                var txtRutaArchivo = fastTextBox.Controls.OfType<System.Windows.Forms.TextBox>().FirstOrDefault();
+
+                // Detectar sintaxis según la extensión del archivo
+                string ext = Path.GetExtension(rutaArchivo).ToLower();
+                AsignarSintaxis(fastColoredTextBox, ext);
+
+                if (fastColoredTextBox != null)
+                   fastColoredTextBox.Text = contenido;
+                   
+
+                if (txtRutaArchivo != null)
+                    txtRutaArchivo.Text = rutaArchivo;
+
+                // Crear nueva pestaña
+                var nuevaPestana = new TabPage(Path.GetFileName(rutaArchivo))
+                {
+                    UseVisualStyleBackColor = true
+                };
+
+                nuevaPestana.Controls.Add(fastTextBox);
+
+                int lastIndex = editor.tabControl1.TabCount - 1;
+                editor.tabControl1.TabPages.Insert(lastIndex, nuevaPestana);
+                editor.tabControl1.SelectedTab = nuevaPestana;
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "No se puede abrir este archivo porque no es un archivo de texto compatible.",
+                    "Archivo no compatible",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+            }
+        }
+
+        private void AsignarSintaxis(FastColoredTextBox fctb, string ext)
+        {
+            switch (ext)
+            {
+                case ".cs":
+                    fctb.Language = FastColoredTextBoxNS.Language.CSharp;
+                    fctb.Refresh();
+                    break;
+
+                case ".vb":
+                    fctb.Language = FastColoredTextBoxNS.Language.VB;
+                    break;
+
+                case ".html":
+                    fctb.Language = FastColoredTextBoxNS.Language.HTML;
+                    break;
+
+                case ".xml":
+                    fctb.Language = FastColoredTextBoxNS.Language.XML;
+                    break;
+
+                case ".resx":
+                    fctb.Language = FastColoredTextBoxNS.Language.XML;
+                    break;
+
+                case ".sql":
+                    fctb.Language = FastColoredTextBoxNS.Language.SQL;
+                    break;
+
+                case ".php":
+                    fctb.Language = FastColoredTextBoxNS.Language.PHP;
+                    break;
+
+                case ".js":
+                    fctb.Language = FastColoredTextBoxNS.Language.JS;
+                    break;
+
+                case ".lua":
+                    fctb.Language = FastColoredTextBoxNS.Language.Lua;
+                    break;
+
+                default:
+                    // Si la extensión no está soportada → texto plano
+                    fctb.Language = FastColoredTextBoxNS.Language.Custom;
+                    break;
+            }
+        }
+
     }
 }

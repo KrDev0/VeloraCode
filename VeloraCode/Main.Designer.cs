@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +62,8 @@
             this.acercadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.btnAbrirCarpeta = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -153,6 +156,7 @@
             this.imprimirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
             this.imprimirToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.imprimirToolStripMenuItem.Text = "&Imprimir";
+            this.imprimirToolStripMenuItem.Click += new System.EventHandler(this.imprimirToolStripMenuItem_Click);
             // 
             // vistapreviadeimpresiónToolStripMenuItem
             // 
@@ -161,6 +165,7 @@
             this.vistapreviadeimpresiónToolStripMenuItem.Name = "vistapreviadeimpresiónToolStripMenuItem";
             this.vistapreviadeimpresiónToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.vistapreviadeimpresiónToolStripMenuItem.Text = "&Vista previa de impresión";
+            this.vistapreviadeimpresiónToolStripMenuItem.Click += new System.EventHandler(this.vistapreviadeimpresiónToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -172,6 +177,7 @@
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
             this.salirToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.salirToolStripMenuItem.Text = "&Salir";
+            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
             // editarToolStripMenuItem
             // 
@@ -193,7 +199,7 @@
             // 
             this.deshacerToolStripMenuItem.Name = "deshacerToolStripMenuItem";
             this.deshacerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.deshacerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deshacerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.deshacerToolStripMenuItem.Text = "&Deshacer";
             this.deshacerToolStripMenuItem.Click += new System.EventHandler(this.deshacerToolStripMenuItem_Click);
             // 
@@ -201,7 +207,7 @@
             // 
             this.rehacerToolStripMenuItem.Name = "rehacerToolStripMenuItem";
             this.rehacerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.rehacerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rehacerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.rehacerToolStripMenuItem.Text = "&Rehacer";
             this.rehacerToolStripMenuItem.Click += new System.EventHandler(this.rehacerToolStripMenuItem_Click);
             // 
@@ -216,7 +222,7 @@
             this.cortarToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cortarToolStripMenuItem.Name = "cortarToolStripMenuItem";
             this.cortarToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cortarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cortarToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.cortarToolStripMenuItem.Text = "Cor&tar";
             this.cortarToolStripMenuItem.Click += new System.EventHandler(this.cortarToolStripMenuItem_Click);
             // 
@@ -226,7 +232,7 @@
             this.copiarToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copiarToolStripMenuItem.Name = "copiarToolStripMenuItem";
             this.copiarToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copiarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copiarToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.copiarToolStripMenuItem.Text = "&Copiar";
             this.copiarToolStripMenuItem.Click += new System.EventHandler(this.copiarToolStripMenuItem_Click);
             // 
@@ -236,7 +242,7 @@
             this.pegarToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pegarToolStripMenuItem.Name = "pegarToolStripMenuItem";
             this.pegarToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pegarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pegarToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.pegarToolStripMenuItem.Text = "&Pegar";
             this.pegarToolStripMenuItem.Click += new System.EventHandler(this.pegarToolStripMenuItem_Click);
             // 
@@ -248,7 +254,7 @@
             // seleccionartodoToolStripMenuItem
             // 
             this.seleccionartodoToolStripMenuItem.Name = "seleccionartodoToolStripMenuItem";
-            this.seleccionartodoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.seleccionartodoToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.seleccionartodoToolStripMenuItem.Text = "&Seleccionar todo";
             this.seleccionartodoToolStripMenuItem.Click += new System.EventHandler(this.seleccionartodoToolStripMenuItem_Click);
             // 
@@ -322,6 +328,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnAbrirCarpeta);
             this.splitContainer1.Panel1.Controls.Add(this.treeView1);
             this.splitContainer1.Size = new System.Drawing.Size(800, 426);
             this.splitContainer1.SplitterDistance = 224;
@@ -330,10 +337,31 @@
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.imageList1;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
+            this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(224, 426);
             this.treeView1.TabIndex = 0;
+            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            // 
+            // btnAbrirCarpeta
+            // 
+            this.btnAbrirCarpeta.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnAbrirCarpeta.Location = new System.Drawing.Point(27, 205);
+            this.btnAbrirCarpeta.Name = "btnAbrirCarpeta";
+            this.btnAbrirCarpeta.Size = new System.Drawing.Size(170, 27);
+            this.btnAbrirCarpeta.TabIndex = 1;
+            this.btnAbrirCarpeta.Text = "Abrir carpeta";
+            this.btnAbrirCarpeta.UseVisualStyleBackColor = true;
+            this.btnAbrirCarpeta.Click += new System.EventHandler(this.btnAbrirCarpeta_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // Main
             // 
@@ -344,7 +372,8 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
-            this.Text = "VeloraCode";
+            this.Text = "\\";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -389,6 +418,8 @@
         private System.Windows.Forms.ToolStripMenuItem acercadeToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.Button btnAbrirCarpeta;
+        public System.Windows.Forms.ImageList imageList1;
     }
 }
 

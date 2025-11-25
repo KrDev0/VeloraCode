@@ -61,6 +61,7 @@
     <Compile Include="FastTextBox.Designer.cs">
       <DependentUpon>FastTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="IconManager.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
